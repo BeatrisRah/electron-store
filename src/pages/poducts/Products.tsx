@@ -21,19 +21,7 @@ export default function Products() {
         </thead>
         <tbody id="itemTableBody">
           {/* Example row */}
-          <tr className="border-b hover:bg-gray-50">
-            <td className="px-4 py-2">Green Tea</td>
-            <td className="px-4 py-2">Drink</td>
-            <td className="px-4 py-2">Green Tea</td>
-
-            <td className="px-4 py-2">50 бр.</td>
-            <td className="px-4 py-2">$2.50</td>
-            <td className="px-4 py-2">$2.00</td>
-            <td className="px-4 py-2">
-              <button className="text-blue-500 hover:underline">Edit</button>
-              <button className="text-red-500 hover:underline ml-2">Delete</button>
-            </td>
-          </tr>
+          
           <tr className="border-b hover:bg-gray-50">
             <td className="px-4 py-2">Beer</td>
             <td className="px-4 py-2">Drink</td>
