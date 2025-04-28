@@ -3,7 +3,7 @@ import { Product } from "../../types/productType";
 
 type FormProps = {
     onSubmit: () => null,
-    onCancel: () => null,
+    onCancel: () => void,
     initialData: Partial<Product> | null
 }
 

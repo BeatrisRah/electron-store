@@ -22,11 +22,18 @@ export default function Products() {
   }
 
     return(
-        <div className="mx-auto bg-white p-5 min-h-screen">
+        <div className="mx-auto bg-white p-5 min-h-screen relative">
       <h2 className="text-2xl font-bold mb-4">Inventory Items</h2>
-      {/* Search bar (optional) */}
+
+      <div className="flex">
       <SearcBar />
-      {openModal  && <Form initialData={currentProduct} />}
+      {/* TODO: PLACE AT THE END */}
+      <button
+        onClick={() => openCreateForm()}
+        className="border-2 p-2"
+        >Add New</button> 
+      </div>
+      {openModal  && <Form initialData={currentProduct} onCancel={closeModal} />}
       {/* Table */}
       <table className="min-w-full table-auto border-collapse shadow-md">
         <thead>
