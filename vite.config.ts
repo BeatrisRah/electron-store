@@ -11,8 +11,14 @@ export default defineConfig({
     tailwindcss(),
     electron({
       main: {
-        // Shortcut of `build.lib.entry`.
         entry: 'electron/main.ts',
+        vite:{
+          build:{
+            rollupOptions:{
+              external:['pg']
+            }
+          }
+        }
       },
       preload: {
         // Shortcut of `build.rollupOptions.input`.
