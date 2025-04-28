@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 // import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path';
@@ -76,6 +76,20 @@ async function connectDB(){
 
 }
 
+async function connectToTable() {
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS items (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 0,
+    current_price DECIMAL(10, 2) NOT NULL,
+    last_price DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    `)
+}
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
@@ -98,8 +112,14 @@ app.whenReady().then(async () => {
   createWindow()
   try{
     await connectDB()
+    await connectToTable()
   } catch(err){
     console.error('Database error:', err)
     
   }
+})
+
+ipcMain.on('get-all-items', async() => {
+  const res = await client.query(`SELECT * FROM items`)
+  return res.rows;
 })

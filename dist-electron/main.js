@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { fileURLToPath } from "node:url";
 import path$1 from "node:path";
 import require$$0 from "fs";
@@ -360,6 +360,19 @@ async function connectDB() {
   await client.connect();
   console.log("Connected to database:", config.database);
 }
+async function connectToTable() {
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS items (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 0,
+    current_price DECIMAL(10, 2) NOT NULL,
+    last_price DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    `);
+}
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -375,9 +388,14 @@ app.whenReady().then(async () => {
   createWindow();
   try {
     await connectDB();
+    await connectToTable();
   } catch (err) {
     console.error("Database error:", err);
   }
+});
+ipcMain.on("get-all-items", async () => {
+  const res = await client.query(`SELECT * FROM items`);
+  return res.rows;
 });
 export {
   MAIN_DIST,
