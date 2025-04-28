@@ -1,8 +1,11 @@
 import { Product } from "../../types/productType";
 
-type ProductItemProps = Product
+type ProductItemProps = {
+  data: Product
+  onOpen: (data: Product) => void;
+}
 
-export default function ProductItem(data: ProductItemProps) {
+export default function ProductItem({data, onOpen}: ProductItemProps,) {
     return (
         <tr className="border-b hover:bg-gray-50">
         <td className="px-4 py-2">{data.name}</td>
@@ -13,7 +16,7 @@ export default function ProductItem(data: ProductItemProps) {
         <td className="px-4 py-2">{data.currentPrice} лв.</td>
         <td className="px-4 py-2">{data.lastPrice} лв.</td>
         <td className="px-4 py-2">
-          <button className="text-blue-500 hover:underline">Edit</button>
+          <button onClick={() => onOpen(data)} className="text-blue-500 hover:underline">Edit</button>
           <button className="text-red-500 hover:underline ml-2">Delete</button>
         </td>
       </tr>

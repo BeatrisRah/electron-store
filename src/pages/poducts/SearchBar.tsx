@@ -31,7 +31,7 @@ export default function SearcBar() {
             {/* Input */}
             <input
                 type="text"
-                placeholder={`Search by ${searchField}...`}
+                placeholder='Потърси...'
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
