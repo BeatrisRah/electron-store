@@ -400,8 +400,62 @@ app.whenReady().then(async () => {
   }
 });
 ipcMain.handle("get-all-items", async () => {
-  const res = await client.query(`SELECT * FROM items`);
+  const res = await client.query(`
+  SELECT 
+    items.*,
+    companies.name AS company_name
+  FROM items
+  JOIN companies ON items.company_id = companies.id`);
   return res.rows;
+});
+ipcMain.handle("add-item", async (_event, item) => {
+  var _a;
+  try {
+    await client.query("BEGIN");
+    const companyRes = await client.query(
+      `
+    WITH company_entry AS (
+      INSERT INTO companies (name)
+      VALUES ($1)
+      ON CONFLICT (name) DO NOTHING
+      RETURNING id
+    )
+    SELECT id FROM company_entry
+    UNION
+    SELECT id FROM companies WHERE name = $1
+    `,
+      [item.company_name]
+    );
+    const companyId = (_a = companyRes.rows[0]) == null ? void 0 : _a.id;
+    if (!companyId) throw new Error("Failed to find or insert company");
+    const insrtedRes = await client.query(
+      `
+    INSERT INTO items (
+      name,
+      type,
+      quantity,
+      current_price,
+      last_price,
+      company_id
+    ) VALUES ($1, $2, $3, $4, $5, $6)
+    `,
+      [
+        item.name,
+        item.type,
+        item.quantity,
+        item.currentPrice,
+        item.lastPrice ?? null,
+        companyId
+      ]
+    );
+    await client.query("COMMIT");
+    console.log("Item inserted successfully");
+    return insrtedRes.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error inserting item:", err);
+    throw err;
+  }
 });
 export {
   MAIN_DIST,

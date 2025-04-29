@@ -74,10 +74,10 @@ export default function Products() {
                 id:'1',
                 name: 'tesst',
                 type: 'test',
-                company: 'test',
+                company_name: 'test',
                 quantity: 10,
-                currentPrice:1.50,
-                lastPrice:1.40,})} className="text-blue-500 hover:underline">Edit</button>
+                current_price:1.50,
+                last_price:1.40,})} className="text-blue-500 hover:underline">Edit</button>
               <button className="text-red-500 hover:underline ml-2">Delete</button>
             </td>
           </tr>

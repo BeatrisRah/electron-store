@@ -1,5 +1,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import { Product } from "../../types/productType";
+import { createItem } from "../../api/store-api";
 
 type FormProps = {
     onCancel: () => void,
@@ -20,20 +21,26 @@ export default function Form({initialData = null, onCancel }: FormProps) {
             setTitle(initialData.name || "");
             setType(initialData.type || "");
             setQuantity(initialData.quantity || 0);
-            setCurrentPrice(initialData.currentPrice || 0);
-            setLastPrice(initialData.lastPrice || 0);
+            setCurrentPrice(initialData.current_price || 0);
+            setLastPrice(initialData.last_price || 0);
         }
     }, [initialData]);
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+
+        if(!initialData){
+            await createItem({name:title, type, company_name:company, quantity, current_price:currentPrice, last_price:lastPrice})
+        }
+
+        onCancel()
 
     };
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-white p-6 rounded-lg shadow-md w-1/2 border-2 border-gray-400 mx-auto absolute right-0 left-0 top-40"
+            className="bg-white p-6 rounded-lg shadow-md w-1/2 border-2 border-gray-400 mx-auto absolute right-0 left-0 top-20"
         >
             <h2 className="text-2xl font-bold mb-4">
                 {initialData?.id ? "Edit Item" : "Create New Item"}
@@ -81,7 +88,7 @@ export default function Form({initialData = null, onCancel }: FormProps) {
                 <input
                     type="number"
                     value={quantity}
-                    // onChange={(e) => setQuantity(e.target.value)}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     min="0"
                     required
@@ -94,7 +101,7 @@ export default function Form({initialData = null, onCancel }: FormProps) {
                     type="number"
                     step="0.01"
                     value={currentPrice}
-                    // onChange={(e) => setCurrentPrice(e.target.value)}
+                    onChange={(e) => setCurrentPrice(Number(e.target.value))}
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     min="0"
                     required
@@ -107,7 +114,7 @@ export default function Form({initialData = null, onCancel }: FormProps) {
                     type="number"
                     step="0.01"
                     value={lastPrice}
-                    // onChange={(e) => setLastPrice(e.target.value)}
+                    onChange={(e) => setLastPrice(Number(e.target.value))}
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     min="0"
                 />

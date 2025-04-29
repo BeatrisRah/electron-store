@@ -2,8 +2,8 @@ export type Product = {
     id?: string,
     name: string,
     type: string,
-    company: string,
+    company_name: string,
     quantity: number,
-    currentPrice:number,
-    lastPrice?:number,
+    current_price:number,
+    last_price?:number,
 }
