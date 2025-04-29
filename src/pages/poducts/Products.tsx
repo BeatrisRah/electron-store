@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SearcBar from "./SearchBar";
 import { Product } from "../../types/productType";
 import Form from "../create-update/Form";
+import { ToastContainer } from "react-toastify";
 
 export default function Products() {
   const [currentProduct, setCurretProduct] = useState<null | Product>(null)
@@ -29,6 +30,7 @@ export default function Products() {
     return(
         <div className="mx-auto bg-white p-5 min-h-screen relative">
       <h2 className="text-2xl font-bold mb-4">Inventory Items</h2>
+      <ToastContainer />
 
       <div className="flex">
       <SearcBar />
