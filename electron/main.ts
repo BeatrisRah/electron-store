@@ -76,12 +76,19 @@ async function connectDB(){
 
 }
 
-async function connectToTable() {
+async function connectToTables() {
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS companies (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+    );`)
+
   await client.query(`
     CREATE TABLE IF NOT EXISTS items (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(100) NOT NULL,
+    company_id INTEGER REFERENCES companies(id),
     quantity INTEGER NOT NULL DEFAULT 0,
     current_price DECIMAL(10, 2) NOT NULL,
     last_price DECIMAL(10, 2),
@@ -112,7 +119,7 @@ app.whenReady().then(async () => {
   createWindow()
   try{
     await connectDB()
-    await connectToTable()
+    await connectToTables()
   } catch(err){
     console.error('Database error:', err)
     
