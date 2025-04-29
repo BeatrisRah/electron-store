@@ -2,15 +2,15 @@ import { useState, useEffect, FormEvent } from "react";
 import { Product } from "../../types/productType";
 
 type FormProps = {
-    onSubmit: () => null,
     onCancel: () => void,
     initialData: Partial<Product> | null
 }
 
 
-export default function Form({ onSubmit, initialData = null, onCancel }: FormProps) {
+export default function Form({initialData = null, onCancel }: FormProps) {
     const [title, setTitle] = useState("");
     const [type, setType] = useState("");
+    const [company, setCompany] = useState("");
     const [quantity, setQuantity] = useState(0);
     const [currentPrice, setCurrentPrice] = useState(0);
     const [lastPrice, setLastPrice] = useState(0);
@@ -28,7 +28,6 @@ export default function Form({ onSubmit, initialData = null, onCancel }: FormPro
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
 
-        onSubmit();
     };
 
     return (
@@ -46,6 +45,17 @@ export default function Form({ onSubmit, initialData = null, onCancel }: FormPro
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
+                />
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Company</label>
+                <input
+                    type="text"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
                 />

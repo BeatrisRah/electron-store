@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 import SearcBar from "./SearchBar";
 import { Product } from "../../types/productType";
 import Form from "../create-update/Form";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import ProductItem from "./ProductItem";
 
 export default function Products() {
   const [currentProduct, setCurretProduct] = useState<null | Product>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [items, setItems] = useState<Product[]>([])
 
   useEffect(() => {
-    window.ipcRenderer.invoke('get-all-items').then(data => console.log(data))
+    window.ipcRenderer.invoke('get-all-items')
+    .then(data => setItems(data))
+    .catch(err => toast.error(err))
     
   }, [])
 
@@ -77,6 +81,7 @@ export default function Products() {
               <button className="text-red-500 hover:underline ml-2">Delete</button>
             </td>
           </tr>
+          {items?.map(i => <ProductItem data={i} key={i.id} onOpen={openEditForm} />)}
           
           {/* Add more rows dynamically here */}
         </tbody>

@@ -5,5 +5,5 @@ export type Product = {
     company: string,
     quantity: number,
     currentPrice:number,
-    lastPrice:number,
+    lastPrice?:number,
 }
