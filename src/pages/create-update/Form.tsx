@@ -1,6 +1,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { Product } from "../../types/productType";
 import { createItem } from "../../api/store-api";
+import CreatableSelect from 'react-select/creatable'
 
 type FormProps = {
     onCancel: () => void,
@@ -12,9 +13,16 @@ export default function Form({initialData = null, onCancel }: FormProps) {
     const [title, setTitle] = useState("");
     const [type, setType] = useState("");
     const [company, setCompany] = useState("");
+    const [companyOptions, setCompanyOptions] = useState<{ label: string; value: string }[]>([])
     const [quantity, setQuantity] = useState(0);
     const [currentPrice, setCurrentPrice] = useState(0);
     const [lastPrice, setLastPrice] = useState(0);
+
+    useEffect(() => {
+        window.ipcRenderer.invoke('get-companies').then((names: string[]) => {
+            setCompanyOptions(names.map(name => ({ label: name, value: name })))
+        })
+    }, [])
 
     useEffect(() => {
         if (initialData) {
@@ -25,6 +33,7 @@ export default function Form({initialData = null, onCancel }: FormProps) {
             setLastPrice(initialData.last_price || 0);
         }
     }, [initialData]);
+
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -58,14 +67,15 @@ export default function Form({initialData = null, onCancel }: FormProps) {
             </div>
 
             <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Company</label>
-                <input
-                    type="text"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
-                />
+            <label className="block text-gray-700 mb-2">Company</label>
+            <CreatableSelect
+                isClearable
+                options={companyOptions}
+                value={company ? { label: company, value: company } : null}
+                onChange={(newValue) => setCompany(newValue?.value || '')}
+                placeholder="Select or type a company..."
+                className="text-black"
+            />
             </div>
 
             <div className="mb-4">

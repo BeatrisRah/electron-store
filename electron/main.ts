@@ -198,3 +198,8 @@ ipcMain.handle('add-item', async(_event, item:Item ) => {
     throw err;
   }
 })
+
+ipcMain.handle('get-companies', async () => {
+  const result = await client.query('SELECT name FROM companies ORDER BY name');
+  return result.rows.map(row => row.name);
+});
