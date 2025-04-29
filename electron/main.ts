@@ -126,7 +126,7 @@ app.whenReady().then(async () => {
   }
 })
 
-ipcMain.on('get-all-items', async() => {
+ipcMain.handle('get-all-items', async() => {
   const res = await client.query(`SELECT * FROM items`)
   return res.rows;
 })

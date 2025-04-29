@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearcBar from "./SearchBar";
 import { Product } from "../../types/productType";
 import Form from "../create-update/Form";
@@ -6,6 +6,11 @@ import Form from "../create-update/Form";
 export default function Products() {
   const [currentProduct, setCurretProduct] = useState<null | Product>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
+
+  useEffect(() => {
+    window.ipcRenderer.invoke('get-all-items').then(data => console.log(data))
+    
+  }, [])
 
   const openEditForm = (productData: Product): void => {
     setCurretProduct(productData)
